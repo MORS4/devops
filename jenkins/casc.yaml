@@ -2,6 +2,9 @@ jenkins:
   systemMessage: "Jenkins (DevOps mini project) — configured via JCasC"
   numExecutors: 2
   mode: NORMAL
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: true
 
   securityRealm:
     local:
