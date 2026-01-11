@@ -74,6 +74,24 @@ git push -u origin dev
 - Pipeline: `Jenkinsfile`
 - Stages: Checkout → Build/Test → Archive → Deploy (docker-compose) → Notify Slack
 
+### Création du job (rappel)
+- **Nouveau Item** → *Pipeline* → nommez: `PipeLine-NomPrenom`
+- **Pipeline** → *Pipeline script from SCM*
+  - SCM: Git
+  - Repository URL: votre repo GitHub
+  - Branch: `*/main` (ou `*/dev` selon le test)
+  - Script Path: `Jenkinsfile`
+- **Webhooks GitHub** (recommandé): `Settings → Webhooks` (payload: `http://<JENKINS_URL>/github-webhook/`)
+
+### Vue personnalisée (suffixe PipeLine)
+- **New View** → *List View*
+- Filtre: **Regex** `.*PipeLine.*`
+
+### Slack (notify)
+- Installez le plugin **Slack Notification**
+- Configurez le workspace + token/credentials dans Jenkins
+- Le `Jenkinsfile` tente `slackSend(...)` en **post success/failure**
+
 ## Rapport
 Un modèle est fourni: `docs/REPORT_TEMPLATE.md`
 
