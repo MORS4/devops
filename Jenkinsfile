@@ -1,10 +1,6 @@
 pipeline {
   agent any
 
-  options {
-    timestamps()
-  }
-
   environment {
     MVN_CMD = "mvn -B"
   }
