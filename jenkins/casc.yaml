@@ -20,12 +20,18 @@ unclassified:
 
 jobs:
   - script: >
+      import jenkins.model.Jenkins;
+
       def student = System.getenv('STUDENT_NAME') ?: 'NomPrenom';
       def repoUrl = System.getenv('GIT_REPO_URL') ?: 'https://github.com/MORS4/devops.git';
       def branch = System.getenv('GIT_BRANCH') ?: '*/main';
 
-      pipelineJob("PipeLine-${student}") {
-        description("Pipeline auto-configuré pour ${repoUrl} (script: Jenkinsfile)")
+      // Clean up accidental job created when JCasC interpolated ${...}
+      def bad = Jenkins.get().getItem('PipeLine-');
+      if (bad != null) { bad.delete(); }
+
+      pipelineJob('PipeLine-' + student) {
+        description('Pipeline auto-configuré pour ' + repoUrl + ' (script: Jenkinsfile)')
         definition {
           cpsScm {
             scm {
