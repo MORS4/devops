@@ -22,5 +22,12 @@ class HelloControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().string(HelloController.MESSAGE));
   }
+
+  @Test
+  void info_returns_project_name() throws Exception {
+    mockMvc.perform(get("/info"))
+        .andExpect(status().isOk())
+        .andExpect(content().string("projet-devops"));
+  }
 }
 

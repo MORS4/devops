@@ -11,5 +11,10 @@ public class HelloController {
   public String hello() {
     return MESSAGE;
   }
+
+  @GetMapping("/info")
+  public String info() {
+    return "projet-devops";
+  }
 }
 
