@@ -6,9 +6,11 @@ USER root
 ENV JENKINS_UC=https://updates.jenkins.io
 ENV JENKINS_UC_DOWNLOAD=https://updates.jenkins.io/download
 
-# Docker CLI (so pipelines can run `docker ...` / `docker compose ...`)
+# Docker CLI (so pipelines can run `docker ...` and compose)
+# Some Debian variants may not have docker-compose-plugin; fallback to docker-compose.
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends docker.io docker-compose-plugin ca-certificates curl \
+  && apt-get install -y --no-install-recommends docker.io ca-certificates curl \
+  && (apt-get install -y --no-install-recommends docker-compose-plugin || apt-get install -y --no-install-recommends docker-compose) \
   && rm -rf /var/lib/apt/lists/*
 
 # Install plugins

@@ -56,15 +56,26 @@ pipeline {
       steps {
         script {
           try {
+            def composeCmd = isUnix() ? "docker compose" : "docker compose"
+            if (isUnix()) {
+              // fallback for environments that only have docker-compose (v1)
+              def hasComposeV2 = sh(script: "docker compose version >/dev/null 2>&1; echo $?", returnStdout: true).trim() == "0"
+              composeCmd = hasComposeV2 ? "docker compose" : "docker-compose"
+            } else {
+              // Windows runners usually have `docker compose`; fallback to `docker-compose` if present
+              def hasComposeV2 = bat(script: "docker compose version >nul 2>nul\r\nif %ERRORLEVEL%==0 (echo 0) else (echo 1)", returnStdout: true).trim().endsWith("0")
+              composeCmd = hasComposeV2 ? "docker compose" : "docker-compose"
+            }
+
             if (isUnix()) {
               sh "docker --version"
-              sh "docker compose version"
-              sh "docker compose up -d --build"
+              sh "${composeCmd} version || true"
+              sh "${composeCmd} up -d --build"
               sh "curl -fsS http://localhost:8080/ | grep -F \"Bonjour et bon courage\""
             } else {
               bat "docker --version"
-              bat "docker compose version"
-              bat "docker compose up -d --build"
+              bat "${composeCmd} version"
+              bat "${composeCmd} up -d --build"
               bat "powershell -NoProfile -Command \"(Invoke-WebRequest -UseBasicParsing http://localhost:8080/).Content\""
             }
           } catch (err) {
