@@ -1,6 +1,6 @@
 # Projet DevOps — Mini Projet
 
-**Nom & Prénom :** _À REMPLACER (Nom Prénom)_
+
 
 ## Objectif
 Application Java/Maven simple + CI/CD avec **GitHub Actions**, **Jenkins**, **Docker** et **docker-compose**.
@@ -76,4 +76,5 @@ git push -u origin dev
 
 ## Rapport
 Un modèle est fourni: `docs/REPORT_TEMPLATE.md`
+
 
