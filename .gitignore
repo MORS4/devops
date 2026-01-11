@@ -1,0 +1,28 @@
+# Maven
+target/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large/binary assets (keep repo clean)
+*.exe
+*.pdf
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+
