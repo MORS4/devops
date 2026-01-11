@@ -69,9 +69,23 @@ pipeline {
               // Avoid conflicts with locally-running containers on the same Docker daemon
               sh "docker rm -f projet-devops-app >/dev/null 2>&1 || true"
               sh "${composeCmd} up -d --build"
-              def isInDocker = sh(script: 'test -f /.dockerenv; echo $?', returnStdout: true).trim() == "0"
-              def url = isInDocker ? "http://host.docker.internal:8080/" : "http://localhost:8080/"
-              sh "curl -fsS ${url} | grep -F \"Bonjour et bon courage\""
+              // Health-check: curl the container IP (works even when Jenkins runs in Docker)
+              sh """
+                set -e
+                CID=$(${composeCmd} ps -q app)
+                IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$CID")
+                echo "App container: $CID ($IP)"
+                for i in 1 2 3 4 5 6 7 8 9 10; do
+                  if curl -fsS "http://$IP:8080/" | grep -F "Bonjour et bon courage" >/dev/null; then
+                    echo "Health-check OK"
+                    exit 0
+                  fi
+                  echo "Waiting for app... ($i/10)"
+                  sleep 2
+                done
+                echo "Health-check FAILED"
+                exit 1
+              """
             } else {
               bat "docker --version"
               bat "${composeCmd} version"
