@@ -66,6 +66,8 @@ pipeline {
             if (isUnix()) {
               sh "docker --version"
               sh "${composeCmd} version || true"
+              // Avoid conflicts with locally-running containers on the same Docker daemon
+              sh "docker rm -f projet-devops-app >/dev/null 2>&1 || true"
               sh "${composeCmd} up -d --build"
               def isInDocker = sh(script: 'test -f /.dockerenv; echo $?', returnStdout: true).trim() == "0"
               def url = isInDocker ? "http://host.docker.internal:8080/" : "http://localhost:8080/"
@@ -73,6 +75,7 @@ pipeline {
             } else {
               bat "docker --version"
               bat "${composeCmd} version"
+              bat "docker rm -f projet-devops-app >nul 2>nul"
               bat "${composeCmd} up -d --build"
               bat "powershell -NoProfile -Command \"(Invoke-WebRequest -UseBasicParsing http://localhost:8080/).Content\""
             }
