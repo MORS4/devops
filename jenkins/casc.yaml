@@ -3,7 +3,8 @@ jenkins:
   numExecutors: 2
   mode: NORMAL
   crumbIssuer:
-    none: {}
+    standard:
+      excludeClientIPFromCrumb: true
 
   securityRealm:
     local:
@@ -34,6 +35,7 @@ jobs:
 
       pipelineJob('PipeLine-' + student) {
         description('Pipeline auto-configuré pour ' + repoUrl + ' (script: Jenkinsfile)')
+        authenticationToken('devops-trigger')
         definition {
           cpsScm {
             scm {
