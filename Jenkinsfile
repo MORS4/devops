@@ -55,7 +55,7 @@ pipeline {
             def composeCmd = isUnix() ? "docker compose" : "docker compose"
             if (isUnix()) {
               // fallback for environments that only have docker-compose (v1)
-              def hasComposeV2 = sh(script: "docker compose version >/dev/null 2>&1; echo $?", returnStdout: true).trim() == "0"
+              def hasComposeV2 = sh(script: 'docker compose version >/dev/null 2>&1; echo $?', returnStdout: true).trim() == "0"
               composeCmd = hasComposeV2 ? "docker compose" : "docker-compose"
             } else {
               // Windows runners usually have `docker compose`; fallback to `docker-compose` if present
@@ -67,7 +67,7 @@ pipeline {
               sh "docker --version"
               sh "${composeCmd} version || true"
               sh "${composeCmd} up -d --build"
-              def isInDocker = sh(script: "test -f /.dockerenv; echo $?", returnStdout: true).trim() == "0"
+              def isInDocker = sh(script: 'test -f /.dockerenv; echo $?', returnStdout: true).trim() == "0"
               def url = isInDocker ? "http://host.docker.internal:8080/" : "http://localhost:8080/"
               sh "curl -fsS ${url} | grep -F \"Bonjour et bon courage\""
             } else {
