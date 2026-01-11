@@ -1,0 +1,60 @@
+jenkins:
+  systemMessage: "Jenkins (DevOps mini project) — configured via JCasC"
+  numExecutors: 2
+  mode: NORMAL
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "${JENKINS_ADMIN_USER}"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+unclassified:
+  location:
+    url: "${JENKINS_URL}"
+
+jobs:
+  - script: >
+      def student = System.getenv('STUDENT_NAME') ?: 'NomPrenom';
+      def repoUrl = System.getenv('GIT_REPO_URL') ?: 'https://github.com/MORS4/devops.git';
+      def branch = System.getenv('GIT_BRANCH') ?: '*/main';
+
+      pipelineJob("PipeLine-${student}") {
+        description("Pipeline auto-configuré pour ${repoUrl} (script: Jenkinsfile)")
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote { url(repoUrl) }
+                branches(branch)
+              }
+            }
+            scriptPath('Jenkinsfile')
+          }
+        }
+        triggers {
+          // fallback if webhook isn't configured yet
+          scm('H/5 * * * *')
+        }
+      }
+
+      listView("Pipelines") {
+        description("Vue: jobs qui contiennent 'PipeLine' dans le nom")
+        jobs {
+          regex('.*PipeLine.*')
+        }
+        columns {
+          status()
+          name()
+          lastSuccess()
+          lastFailure()
+          lastDuration()
+          buildButton()
+        }
+      }
+
