@@ -6,7 +6,7 @@
 Application Java/Maven simple + CI/CD avec **GitHub Actions**, **Jenkins**, **Docker** et **docker-compose**.
 
 ## Application
-- **Message**: `Bonjour et bon courage dans votre projet en DevOps`
+- **Message**: `Bonjour `
 - **Type**: API REST Spring Boot
   - `GET /` retourne le message
 
@@ -76,5 +76,6 @@ git push -u origin dev
 
 ## Rapport
 Un modèle est fourni: `docs/REPORT_TEMPLATE.md`
+
 
 
