@@ -88,20 +88,12 @@ pipeline {
   post {
     success {
       script {
-        try {
-          slackSend(color: 'good', message: "✅ ${env.JOB_NAME} #${env.BUILD_NUMBER} SUCCESS — ${env.BUILD_URL}")
-        } catch (err) {
-          echo "Slack notification skipped (plugin/credentials not configured): ${err}"
-        }
+        echo "Slack notify: skipped unless Jenkins Slack is configured (plugin + token + channel)."
       }
     }
     failure {
       script {
-        try {
-          slackSend(color: 'danger', message: "❌ ${env.JOB_NAME} #${env.BUILD_NUMBER} FAILED — ${env.BUILD_URL}")
-        } catch (err) {
-          echo "Slack notification skipped (plugin/credentials not configured): ${err}"
-        }
+        echo "Slack notify: skipped unless Jenkins Slack is configured (plugin + token + channel)."
       }
     }
   }
