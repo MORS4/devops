@@ -67,7 +67,9 @@ pipeline {
               sh "docker --version"
               sh "${composeCmd} version || true"
               sh "${composeCmd} up -d --build"
-              sh "curl -fsS http://localhost:8080/ | grep -F \"Bonjour et bon courage\""
+              def isInDocker = sh(script: "test -f /.dockerenv; echo $?", returnStdout: true).trim() == "0"
+              def url = isInDocker ? "http://host.docker.internal:8080/" : "http://localhost:8080/"
+              sh "curl -fsS ${url} | grep -F \"Bonjour et bon courage\""
             } else {
               bat "docker --version"
               bat "${composeCmd} version"
